@@ -1,95 +1,59 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-    <script>
-    // 設定你的門禁密碼
-    const password = "19980607"; 
-    
-    // 彈出視窗要求輸入
-    let input = prompt("請輸入訪問密碼：");
-
-    if (input !== password) {
-        alert("密碼錯誤，無法進入！");
-        document.body.innerHTML = "<h1>抱歉，您沒有存取權限。</h1>";
-        window.stop(); // 停止載入後續內容
-    }
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的新計畫</title>
     <style>
-        /* 設定整體的背景顏色與字體 */
-body {
-    background-color: #fdf6e3; /* 舒服的米白色背景 */
-    font-family: "Microsoft JhengHei", sans-serif; /* 設定微軟正黑體 */
-    display: flex;
-    justify-content: center; /* 水平置中 */
-    align-items: center;     /* 垂直置中 */
-    height: 100vh;           /* 讓內容佔滿螢幕高度 */
-    margin: 0;
-}
+        /* 1. 設定整體的背景與字體 */
+        body {
+            background-color: #fdf6e3; /* 米白色背景 */ [cite: 4]
+            font-family: "Microsoft JhengHei", sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
-/* 容器樣式 */
-.container {
-    text-align: center;
-}
+        /* 2. 預設隱藏主內容 */
+        #main-content {
+            display: none; /* 這是關鍵：初始狀態完全隱藏 */ [cite: 14]
+            text-align: center;
+        }
 
-/* 標題顏色 */
-h1 {
-    color: #d33682; /* 桃紅色 */
-    font-size: 2.5rem;
-}
-
-/* 按鈕群組的排版 */
-.button-group {
-    display: flex;
-    flex-direction: column; /* 讓按鈕在手機上垂直排列 */
-    gap: 15px;              /* 按鈕之間的間距 */
-    margin-top: 30px;
-}
-
-/* 按鈕本體的樣式 */
-.btn {
-    background-color: #268bd2; /* 藍色 */
-    color: white;
-    text-decoration: none;     /* 去掉超連結底線 */
-    padding: 15px 40px;
-    border-radius: 30px;       /* 圓角按鈕 */
-    font-size: 1.2rem;
-    transition: 0.3s;          /* 增加觸碰時的動畫感 */
-}
-
-/* 當手指碰觸或滑鼠移過按鈕時 */
-.btn:hover {
-    background-color: #2aa198; /* 變成綠色 */
-    transform: scale(1.05);    /* 微微放大 */
-}
+        /* 你的按鈕樣式... */
+        .btn {
+            background-color: #268bd2; [cite: 10]
+            color: white;
+            padding: 15px 40px;
+            border-radius: 30px; [cite: 11]
+            text-decoration: none;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
-    <div id="main-content" style="display: none;">
-        
+
+    <div id="main-content">
         <h1>今天吃什麼？</h1>
         <div class="button-group">
+            <a href="breakfast.html" class="btn">早餐</a>
             </div>
-        
-    </div> <script>
-        // 設定你的密碼
-        const password = "你的密碼123"; 
-        
-        // 彈出輸入框
-        let input = prompt("請輸入訪問密碼：");
+    </div>
+
+    <script>
+        const password = "你的密碼123"; // 這裡改成你想設定的密碼 [cite: 14]
+        let input = prompt("請輸入訪問密碼："); [cite: 15]
 
         if (input === password) {
-            // 密碼正確：把隱藏的內容顯示出來 (block)
-            document.getElementById("main-content").style.display = "block";
+            // 密碼正確：顯示內容
+            document.getElementById("main-content").style.display = "block"; [cite: 16]
         } else {
-            // 密碼錯誤：跳出警告並徹底清空內容
-            alert("密碼錯誤，無法進入！");
-            document.body.innerHTML = "<h1 style='text-align:center; margin-top:50px;'>抱歉，您沒有存取權限。</h1>";
+            // 密碼錯誤：顯示警示並徹底清空頁面
+            alert("密碼錯誤，無法進入！"); [cite: 17]
+            document.body.innerHTML = "<h1 style='text-align:center; margin-top:50px;'>抱歉，您沒有存取權限。</h1>"; [cite: 17]
         }
     </script>
 </body>
 </html>
-
-

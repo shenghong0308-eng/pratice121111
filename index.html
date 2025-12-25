@@ -67,20 +67,29 @@ h1 {
     </style>
 </head>
 <body>
-    <div class="container">
+    <div id="main-content" style="display: none;">
+        
+        <h1>今天吃什麼？</h1>
+        <div class="button-group">
+            </div>
+        
+    </div> <script>
+        // 設定你的密碼
+        const password = "你的密碼123"; 
+        
+        // 彈出輸入框
+        let input = prompt("請輸入訪問密碼：");
 
-    <h1>今天吃什麼？</h1>
-    <p>請選擇一個時段，讓我幫你決定！</p>
-
-    <div class="button-group">
-        <a href="breakfast.html" class="btn">早餐</a>
-        <a href="lunch.html" class="btn">午餐</a>
-        <a href="dinner.html" class="btn">晚餐</a>
-        <a href="midnight.html" class="btn">宵夜</a>
-    </div>
-
-</div>
-
-    </body>
+        if (input === password) {
+            // 密碼正確：把隱藏的內容顯示出來 (block)
+            document.getElementById("main-content").style.display = "block";
+        } else {
+            // 密碼錯誤：跳出警告並徹底清空內容
+            alert("密碼錯誤，無法進入！");
+            document.body.innerHTML = "<h1 style='text-align:center; margin-top:50px;'>抱歉，您沒有存取權限。</h1>";
+        }
+    </script>
+</body>
 </html>
+
 

@@ -7,7 +7,7 @@
     <style>
         /* 1. 設定整體的背景與字體 */
         body {
-            background-color: #fdf6e3; /* 米白色背景 */ [cite: 4]
+            background-color: #fdf6e3; /* 米白色背景 [cite: 4] */
             font-family: "Microsoft JhengHei", sans-serif;
             margin: 0;
             display: flex;
@@ -18,18 +18,19 @@
 
         /* 2. 預設隱藏主內容 */
         #main-content {
-            display: none; /* 這是關鍵：初始狀態完全隱藏 */ [cite: 14]
+            display: none; /* 初始狀態隱藏  */
             text-align: center;
         }
 
-        /* 你的按鈕樣式... */
+        /* 按鈕樣式 [cite: 10, 11] */
         .btn {
-            background-color: #268bd2; [cite: 10]
+            background-color: #268bd2;
             color: white;
             padding: 15px 40px;
-            border-radius: 30px; [cite: 11]
+            border-radius: 30px;
             text-decoration: none;
             display: inline-block;
+            font-size: 1.2rem;
         }
     </style>
 </head>
@@ -39,23 +40,24 @@
         <h1>今天吃什麼？</h1>
         <div class="button-group">
             <a href="breakfast.html" class="btn">早餐</a>
-            </div>
+        </div>
     </div>
 
     <script>
-        const password = "19980607"; // 這裡改成你想設定的密碼 [cite: 14]
-        let input = prompt("請輸入訪問密碼："); [cite: 15]
+        // 設定密碼為 19980607 
+        const password = "19980607"; 
+        
+        // 確保網頁載入後立即要求密碼 
+        let input = prompt("請輸入訪問密碼：");
 
         if (input === password) {
-            // 密碼正確：顯示內容
-            document.getElementById("main-content").style.display = "block"; [cite: 16]
-        } else {
-            // 密碼錯誤：顯示警示並徹底清空頁面
-            alert("密碼錯誤，無法進入！"); [cite: 17]
-            document.body.innerHTML = "<h1 style='text-align:center; margin-top:50px;'>抱歉，您沒有存取權限。</h1>"; [cite: 17]
+            // 密碼正確：顯示內容 [cite: 16]
+            document.getElementById("main-content").style.display = "block";
+        } else if (input !== null) {
+            // 密碼錯誤且未按取消：顯示警示並清空頁面 [cite: 17]
+            alert("密碼錯誤，無法進入！");
+            document.body.innerHTML = "<h1 style='text-align:center; margin-top:50px;'>抱歉，您沒有存取權限。</h1>";
         }
     </script>
 </body>
 </html>
-
-

@@ -3,29 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的手機版網頁</title>
+    <title>我的新計畫</title>
     <style>
-        /* 加一點簡單的 CSS 讓它在手機上更好看 */
-        body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
-        img { max-width: 100%; height: auto; } /* 確保圖片不超出手機螢幕 */
-        body {
-    background-color: #f0f8ff; /* 換成淺藍色背景 */
-    color: #333;               /* 深灰色文字 */
-    text-align: center;        /* 文字置中 */
-    padding: 50px;
+        /* 設定整體的背景顏色與字體 */
+body {
+    background-color: #fdf6e3; /* 舒服的米白色背景 */
+    font-family: "Microsoft JhengHei", sans-serif; /* 設定微軟正黑體 */
+    display: flex;
+    justify-content: center; /* 水平置中 */
+    align-items: center;     /* 垂直置中 */
+    height: 100vh;           /* 讓內容佔滿螢幕高度 */
+    margin: 0;
 }
 
+/* 容器樣式 */
+.container {
+    text-align: center;
+}
+
+/* 標題顏色 */
 h1 {
-    color: #ff4500;            /* 標題變橘紅色 */
-    border-bottom: 2px solid #ff4500; /* 加一條底線 */
+    color: #d33682; /* 桃紅色 */
+    font-size: 2.5rem;
+}
+
+/* 按鈕群組的排版 */
+.button-group {
+    display: flex;
+    flex-direction: column; /* 讓按鈕在手機上垂直排列 */
+    gap: 15px;              /* 按鈕之間的間距 */
+    margin-top: 30px;
+}
+
+/* 按鈕本體的樣式 */
+.btn {
+    background-color: #268bd2; /* 藍色 */
+    color: white;
+    text-decoration: none;     /* 去掉超連結底線 */
+    padding: 15px 40px;
+    border-radius: 30px;       /* 圓角按鈕 */
+    font-size: 1.2rem;
+    transition: 0.3s;          /* 增加觸碰時的動畫感 */
+}
+
+/* 當手指碰觸或滑鼠移過按鈕時 */
+.btn:hover {
+    background-color: #2aa198; /* 變成綠色 */
+    transform: scale(1.05);    /* 微微放大 */
 }
     </style>
 </head>
 <body>
-    <h1>這是手機也能看的網頁！</h1>
-    <p>如果你在手機上看到這段文字，代表你的縮放設定成功了。</p>
-    <img src="https://via.placeholder.com/400" alt="範例圖片">
-</body>
+    <div class="container">
+
+    <h1>今天吃什麼？</h1>
+    <p>請選擇一個時段，讓我幫你決定！</p>
+
+    <div class="button-group">
+        <a href="breakfast.html" class="btn">早餐</a>
+        <a href="lunch.html" class="btn">午餐</a>
+        <a href="dinner.html" class="btn">晚餐</a>
+        <a href="midnight.html" class="btn">宵夜</a>
+    </div>
+
+</div>
+
+    </body>
 </html>
-
-

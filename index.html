@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+    <script>
+    // 設定你的門禁密碼
+    const password = "19980607"; 
+    
+    // 彈出視窗要求輸入
+    let input = prompt("請輸入訪問密碼：");
+
+    if (input !== password) {
+        alert("密碼錯誤，無法進入！");
+        document.body.innerHTML = "<h1>抱歉，您沒有存取權限。</h1>";
+        window.stop(); // 停止載入後續內容
+    }
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的新計畫</title>
@@ -70,3 +83,4 @@ h1 {
 
     </body>
 </html>
+

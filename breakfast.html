@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>早餐抽籤</title>
+    <style>
+        body {
+            background-color: #fdf6e3;
+            font-family: "Microsoft JhengHei", sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+
+        .result-box {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            width: 80%;
+            max-width: 300px;
+        }
+
+        #restaurant-name {
+            font-size: 2rem;
+            color: #268bd2;
+            margin: 10px 0;
+        }
+
+        .btn-back {
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>早餐吃什麼？</h1>
+
+    <div class="result-box">
+        <p>為您推薦：</p>
+        <h2 id="restaurant-name">點擊下方抽取</h2>
+    </div>
+
+    <button onclick="pickRestaurant()" style="padding: 10px 20px; border-radius: 10px; border: none; background: #d33682; color: white; cursor: pointer;">
+        開始抽取
+    </button>
+
+    <br>
+    <a href="index.html" class="btn-back">← 返回首頁</a>
+
+    <script>
+        // 這就是 JavaScript，網頁的「大腦」
+        function pickRestaurant() {
+            // 1. 建立你的餐廳名單（你可以自由修改這裡的內容）
+            const restaurants = ["麥當勞", "美而美早餐", "永和豆漿", "便利商店", "摩斯漢堡", "路邊攤飯糰"];
+            
+            // 2. 隨機計算出一個索引值
+            const randomIndex = Math.floor(Math.random() * restaurants.length);
+            
+            // 3. 取得隨機到的餐廳名稱
+            const selected = restaurants[randomIndex];
+            
+            // 4. 把名稱顯示在網頁的 id="restaurant-name" 標籤中
+            document.getElementById("restaurant-name").innerText = selected;
+        }
+    </script>
+
+</body>
+</html>

@@ -2,110 +2,58 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的每日任務系統</title>
     <style>
-        body { font-family: sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; background-color: #f4f4f9; }
-        .card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        .task-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 10px 0; }
-        button { cursor: pointer; background: #007bff; color: white; border: none; padding: 8px 12px; border-radius: 4px; }
-        button:disabled { background: #ccc; }
-        .score { font-size: 1.2em; color: #28a745; font-weight: bold; }
+        body { font-family: "Microsoft JhengHei", sans-serif; max-width: 700px; margin: 20px auto; padding: 20px; background-color: #f0f2f5; line-height: 1.6; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        h2 { color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
+        
+        /* 任務列表樣式 */
+        .task-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 12px 0; }
+        .task-info { flex-grow: 1; }
+        .badge { padding: 2px 8px; border-radius: 12px; font-size: 0.8em; margin-left: 10px; color: white; }
+        .bg-easy { background: #28a745; }
+        .bg-mid { background: #ffc107; color: #333; }
+        .bg-hard { background: #dc3545; }
+
+        /* 按鈕樣式 */
+        button { cursor: pointer; background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 6px; transition: 0.3s; }
+        button:hover { background: #0056b3; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        .btn-delete { background: #ff4d4d; margin-left: 10px; padding: 4px 8px; font-size: 0.8em; }
+        .btn-delete:hover { background: #cc0000; }
+
+        /* 輸入區樣式 */
+        .input-group { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        input[type="text"] { flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px; min-width: 200px; }
+        select { padding: 8px; border-radius: 4px; border: 1px solid #ddd; }
+        
+        .score-display { font-size: 1.5em; color: #007bff; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <h1>📅 每日任務系統</h1>
     <div class="card">
-        <p>當前總積分：<span id="totalScore" class="score">0</span></p>
-        <button id="drawBtn" onclick="drawTasks()">抽取今日任務 (每日限一次)</button>
+        <h1>📅 每日任務系統</h1>
+        <p>累計積分：<span id="totalScore" class="score-display">0</span></p>
+        <button id="drawBtn" onclick="drawTasks()" style="width: 100%; padding: 15px; font-size: 1.1em;">🎲 抽取今日任務</button>
     </div>
 
-    <div id="todayTasks" class="card">
-        <h3>今日任務：</h3>
-        <div id="taskList">請先抽取任務...</div>
+    <div id="todayTasksArea" class="card">
+        <h2>🎯 今日目標</h2>
+        <div id="taskList">請點擊上方按鈕開始抽取...</div>
     </div>
 
     <div class="card">
-        <h3>新增任務池：</h3>
-        <input type="text" id="taskInput" placeholder="輸入任務指令（如：跑步）">
-        <select id="difficultyInput">
-            <option value="10">簡單 (10分)</option>
-            <option value="30">中等 (30分)</option>
-            <option value="50">困難 (50分)</option>
-        </select>
-        <button onclick="addTaskToPool()">新增任務</button>
+        <h2>➕ 新增任務到庫</h2>
+        <div class="input-group">
+            <input type="text" id="taskInput" placeholder="輸入任務內容 (例如：背10個單字)">
+            <select id="difficultyInput">
+                <option value="10">簡單 (10分)</option>
+                <option value="30">中等 (30分)</option>
+                <option value="50">困難 (50分)</option>
+            </select>
+            <button onclick="addTaskToPool()">加入庫存</button>
+        </div>
     </div>
-
-    <script>
-        // 1. 初始化資料 (如果 LocalStorage 沒資料就給預設值)
-        let taskPool = JSON.parse(localStorage.getItem('taskPool')) || [
-            { cmd: "喝 2000cc 水", difficulty: 10 },
-            { cmd: "閱讀 30 分鐘", difficulty: 30 },
-            { cmd: "運動 1 小時", difficulty: 50 }
-        ];
-        let score = parseInt(localStorage.getItem('score')) || 0;
-        let todayTasks = JSON.parse(localStorage.getItem('todayTasks')) || [];
-
-        // 更新畫面上的分數
-        document.getElementById('totalScore').innerText = score;
-
-        // 2. 新增任務到任務池
-        function addTaskToPool() {
-            const cmd = document.getElementById('taskInput').value;
-            const diff = parseInt(document.getElementById('difficultyInput').value);
-            
-            if (cmd === "") return alert("請輸入指令");
-            
-            taskPool.push({ cmd: cmd, difficulty: diff });
-            localStorage.setItem('taskPool', JSON.stringify(taskPool)); // 永久儲存
-            alert("任務已加入任務池！");
-            document.getElementById('taskInput').value = "";
-        }
-
-        // 3. 隨機抽取 3 個任務
-        function drawTasks() {
-            if (taskPool.length < 3) return alert("任務池至少需要 3 個任務才能抽取！");
-            
-            // 隨機打亂並取前三個
-            const shuffled = [...taskPool].sort(() => 0.5 - Math.random());
-            todayTasks = shuffled.slice(0, 3).map(t => ({ ...t, completed: false }));
-            
-            saveAndRender();
-        }
-
-        // 4. 完成任務加分
-        function completeTask(index) {
-            if (todayTasks[index].completed) return;
-            
-            score += todayTasks[index].difficulty;
-            todayTasks[index].completed = true;
-            
-            localStorage.setItem('score', score);
-            document.getElementById('totalScore').innerText = score;
-            saveAndRender();
-        }
-
-        // 儲存今日狀態並渲染畫面
-        function saveAndRender() {
-            localStorage.setItem('todayTasks', JSON.stringify(todayTasks));
-            const listDiv = document.getElementById('taskList');
-            listDiv.innerHTML = "";
-
-            todayTasks.forEach((task, index) => {
-                const div = document.createElement('div');
-                div.className = 'task-item';
-                div.innerHTML = `
-                    <span>${task.cmd} (${task.difficulty}分)</span>
-                    <button onclick="completeTask(${index})" ${task.completed ? 'disabled' : ''}>
-                        ${task.completed ? '已完成' : '點擊完成'}
-                    </button>
-                `;
-                listDiv.appendChild(div);
-            });
-        }
-
-        // 初次加載時渲染今日任務
-        if (todayTasks.length > 0) saveAndRender();
-    </script>
-</body>
-</html>

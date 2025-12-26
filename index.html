@@ -3,76 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>每日任務系統 - 懲罰模式</title>
+    <title>任務挑戰系統</title>
     <style>
-        :root { --primary: #4a90e2; --success: #27ae60; --danger: #e74c3c; --warning: #f39c12; --bg: #f5f7fa; }
-        body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; background-color: var(--bg); color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-        .card { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        h2 { border-left: 5px solid var(--primary); padding-left: 10px; font-size: 1.2em; }
+        :root { --main-blue: #007bff; --success-green: #28a745; --fail-red: #dc3545; --warn-orange: #fd7e14; }
+        body { font-family: "Microsoft JhengHei", sans-serif; background-color: #f8f9fa; padding: 20px; max-width: 600px; margin: auto; }
+        .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        h2 { margin-top: 0; color: #333; border-bottom: 2px solid #eee; padding-bottom: 10px; }
         
-        .status-bar { display: flex; justify-content: space-around; text-align: center; margin-bottom: 10px; }
-        .status-item { flex: 1; }
-        .status-value { font-size: 20px; font-weight: bold; display: block; }
+        /* 狀態顯示 */
+        .status-container { display: flex; justify-content: space-around; text-align: center; }
+        .status-box { flex: 1; }
+        .status-num { font-size: 24px; font-weight: bold; display: block; }
         
-        .task-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #eee; }
-        .punish-active { border: 2px solid var(--danger); background-color: #fff5f5; border-radius: 10px; padding: 15px; margin: 10px 0; }
+        /* 任務清單樣式 */
+        .item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f1f1f1; }
+        .item:last-child { border-bottom: none; }
+        .task-text { flex-grow: 1; font-size: 16px; }
+        
+        /* 按鈕樣式 */
+        button { border: none; border-radius: 6px; padding: 8px 12px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-draw { background: var(--main-blue); color: white; width: 100%; padding: 15px; font-size: 18px; }
+        .btn-ok { background: var(--success-green); color: white; margin-right: 5px; }
+        .btn-no { background: var(--fail-red); color: white; }
+        .btn-del { background: #666; color: white; padding: 4px 8px; font-size: 12px; }
+        button:disabled { background: #ccc !important; cursor: not-allowed; }
 
-        .btn { border: none; border-radius: 8px; padding: 8px 12px; cursor: pointer; transition: 0.2s; color: white; }
-        .btn-main { background: var(--primary); width: 100%; font-size: 16px; padding: 12px; margin: 10px 0; }
-        .btn-success { background: var(--success); }
-        .btn-danger { background: var(--danger); }
-        .btn-small { font-size: 12px; padding: 4px 8px; }
-        .btn:disabled { background: #ccc; cursor: not-allowed; }
+        /* 懲罰區域 */
+        #punishBanner { background: #fff3f3; border: 2px dashed var(--fail-red); padding: 15px; border-radius: 8px; color: var(--fail-red); text-align: center; margin-bottom: 20px; display: none; }
 
-        .input-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
-        input { padding: 8px; border: 1px solid #ddd; border-radius: 5px; }
-        
-        .fail-dots { color: var(--danger); font-size: 1.5em; letter-spacing: 5px; }
+        /* 輸入框 */
+        .input-area { display: flex; gap: 5px; margin-top: 10px; }
+        input { flex-grow: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
     </style>
 </head>
 <body>
 
     <div class="card">
-        <h1>🚀 任務控制中心</h1>
-        <div class="status-bar">
-            <div class="status-item">累計積分<span id="scoreDisplay" class="status-value" style="color:var(--success)">0</span></div>
-            <div class="status-item">失敗次數<span id="failDisplay" class="status-value" style="color:var(--danger)">0 / 3</span></div>
+        <h1 style="text-align: center; margin: 0 0 20px 0;">🎮 我的成長系統</h1>
+        <div class="status-container">
+            <div class="status-box">
+                <span class="status-num" style="color: var(--success-green);" id="scoreDisplay">0</span>
+                累積積分
+            </div>
+            <div class="status-box">
+                <span class="status-num" style="color: var(--fail-red);" id="failDisplay">0 / 3</span>
+                失敗累積
+            </div>
         </div>
-        <div id="failDots" class="fail-dots" style="text-align: center;"></div>
-        <button class="btn btn-main" onclick="drawThreeTasks()">🎲 抽取今日任務</button>
+        <button class="btn-draw" style="margin-top:20px;" onclick="drawTasks()">🎲 抽取今日任務</button>
     </div>
 
-    <div id="punishArea" style="display: none;">
-        <div class="card punish-active">
-            <h2 style="color:var(--danger); border-color:var(--danger)">⚠️ 懲罰任務激活！</h2>
-            <div id="punishContent" style="font-size: 1.1em; margin: 10px 0;"></div>
-            <button class="btn btn-danger" style="width:100%" onclick="finishPunishment()">我已完成懲罰，重新開始</button>
-        </div>
+    <div id="punishBanner">
+        <h3>🚨 懲罰執行中</h3>
+        <p id="punishText" style="font-size: 18px; font-weight: bold;"></p>
+        <button class="btn-ok" onclick="clearPunish()">我已完成懲罰 (重置失敗數)</button>
     </div>
 
     <div class="card">
         <h2>🎯 今日任務</h2>
-        <div id="todayDisplay">尚未抽取...</div>
+        <div id="todayList">點擊上方按鈕開始...</div>
     </div>
 
     <div class="card">
-        <h2>🛠️ 任務庫設定</h2>
-        <div class="input-group">
-            <input type="text" id="newTaskCmd" placeholder="任務名稱...">
-            <button class="btn btn-success" onclick="addNewTask('normal')">＋ 新增一般任務</button>
+        <h2>📚 一般任務庫</h2>
+        <div class="input-area">
+            <input type="text" id="taskInput" placeholder="輸入任務指令...">
+            <button class="btn-ok" onclick="addToPool('normal')">新增</button>
         </div>
-        <div id="poolDisplay"></div>
-        
-        <hr>
-        
-        <h2 style="border-color: var(--danger)">💀 懲罰庫設定</h2>
-        <div class="input-group">
-            <input type="text" id="newPunishCmd" placeholder="懲罰內容 (如：深蹲50下)...">
-            <button class="btn btn-danger" onclick="addNewTask('punish')">＋ 新增懲罰任務</button>
+        <div id="normalPool" style="margin-top: 10px; max-height: 150px; overflow-y: auto;"></div>
+    </div>
+
+    <div class="card">
+        <h2>💀 懲罰任務庫</h2>
+        <div class="input-area">
+            <input type="text" id="punishInput" placeholder="輸入懲罰內容...">
+            <button class="btn-no" onclick="addToPool('punish')">新增</button>
         </div>
-        <div id="punishPoolDisplay"></div>
+        <div id="punishPool" style="margin-top: 10px; max-height: 150px; overflow-y: auto;"></div>
     </div>
 
     <script>
-        // 資料載入
-        let taskPool = JSON.parse(localStorage.getItem('pool
+        // --- 1. 資料讀取與預設值 ---
+        const defaultTasks = ["喝水 500cc", "深蹲 10 下", "看書 10 分鐘"];
+        const defaultPunishments = ["原地跳 50 下", "放下手機 30 分鐘"];
+
+        let data = {
+            score: parseInt(localStorage.getItem('task_score')) || 0,
+            failCount: parseInt(localStorage.getItem('task_fail')) || 0,
+            normalPool: JSON.parse(localStorage.getItem('task_pool_normal')) || defaultTasks,
+            punishPool: JSON.parse(localStorage.getItem('task_pool_punish')) || defaultPunishments,
+            todayTasks: JSON.parse(localStorage.getItem('task_today')) || [],
+            activePunish: localStorage.getItem('task_active_punish') || ""
+        };
+
+        // --- 2. 核心邏輯 ---
+
+        // 抽取任務
+        function drawTasks() {
+            if (data.activePunish) return alert("請先完成懲罰任務！");
+            if (data.normalPool.length < 3) return alert("任務庫至少需要 3 個任務！");
+            
+            // 隨機選三個
+            const shuffled = [...data.normalPool].sort(() => 0.5 - Math.random());
+            data.todayTasks = shuffled.slice(0, 3).map(cmd => ({ cmd, status: 'pending' }));
+            
+            saveAndRender();
+        }
+
+        // 完成或失敗
+        function updateTaskStatus(index, status) {
+            if (data.todayTasks[index].status !== 'pending') return;
+
+            data.todayTasks[index].status = status;
+
+            if (status === 'done') {
+                data.score += 10;
+            } else {
+                data.failCount++;
+                if (data.failCount >= 3) {
+                    triggerPunish();
+                }
+            }
+            saveAndRender();
+        }
+
+        // 觸發懲罰
+        function triggerPunish() {
+            if (data.punishPool.length === 0) {
+                data.activePunish = "無預設懲罰，請自訂懲罰內容！";
+            } else {
+                const rand = Math.floor(Math.random() * data.punishPool.length);
+                data.activePunish = data.punishPool[rand];
+            }
+            alert("❌ 失敗三次！觸發懲罰：" + data.activePunish);
+        }
+
+        // 清除懲罰
+        function clearPunish() {
+            data.activePunish = "";
+            data.failCount = 0;
+            saveAndRender();
+        }
+
+        // 新增任務到庫
+        function addToPool(type) {
+            const input = type === 'normal' ? document.getElementById('taskInput') : document.getElementById('punishInput');
+            const val = input.value.trim();
+            if (!val) return;
+
+            if (type === 'normal') data.normalPool.push(val);
+            else data.punishPool.push(val);
+
+            input.value = "";
+            saveAndRender();
+        }
+
+        // 刪除庫中任務
+        function deleteFromPool(type, index) {
+            if (type === 'normal') data.normalPool.splice(index, 1);
+            else data.punishPool.splice(index, 1);
+            saveAndRender();
+        }
+
+        // --- 3. 畫面渲染與儲存 ---
+
+        function saveAndRender() {
+            // 儲存至本地
+            localStorage.setItem('task_score', data.score);
+            localStorage.setItem('task_fail', data.failCount);
+            localStorage.setItem('task_pool_normal', JSON.stringify(data.normalPool));
+            localStorage.setItem('task_pool_punish', JSON.stringify(data.punishPool));
+            localStorage.setItem('task_today', JSON.stringify(data.todayTasks));
+            localStorage.setItem('task_active_punish', data.activePunish);
+
+            // 更新數據顯示
+            document.getElementById('scoreDisplay').innerText = data.score;
+            document.getElementById('failDisplay').innerText = data.failCount + " / 3";
+
+            // 懲罰區顯示
+            const banner = document.getElementById('punishBanner');
+            if (data.activePunish) {
+                banner.style.display = 'block';
+                document.getElementById('punishText').innerText = data.activePunish;
+            } else {
+                banner.style.display = 'none';
+            }
+
+            // 今日任務列表渲染
+            const todayDiv = document.getElementById('todayList');
+            if (data.todayTasks.length === 0) {
+                todayDiv.innerHTML = "尚未抽取任務";
+            } else {
+                todayDiv.innerHTML = data.todayTasks.map((t, i) => `
+                    <div class="item">
+                        <span class="task-text" style="${t.status !== 'pending' ? 'text-decoration: line-through; color: #999;' : ''}">${t.cmd}</span>
+                        ${t.status === 'pending' ? `
+                            <button class="btn-ok" onclick="updateTaskStatus(${i}, 'done')">完成</button>
+                            <button class="btn-no" onclick="updateTaskStatus(${i}, 'fail')">失敗</button>
+                        ` : `<span>${t.status === 'done' ? '✅' : '❌'}</span>`}
+                    </div>
+                `).join('');
+            }
+
+            // 任務庫渲染
+            renderPoolList('normalPool', 'normal');
+            renderPoolList('punishPool', 'punish');
+        }
+
+        function renderPoolList(elementId, type) {
+            const list = type === 'normal' ? data.normalPool : data.punishPool;
+            document.getElementById(elementId).innerHTML = list.map((cmd, i) => `
+                <div class="item">
+                    <span style="font-size: 14px;">${cmd}</span>
+                    <button class="btn-del" onclick="deleteFromPool('${type}', ${i})">刪除</button>
+                </div>
+            `).join('');
+        }
+
+        // 初始啟動
+        saveAndRender();
+
+    </script>
+</body>
+</html>
